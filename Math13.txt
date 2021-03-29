@@ -1,0 +1,13 @@
+what is anything?	Ur the teacher
+what is 2+2?	4
+What is 3+3?	6
+what is 4+4?	8
+what is 4+5?	9
+what is 4+6?	10
+what is 4+7?	11
+what is 4+8?	12
+what is 4+9?	13
+what is 4+1?	5
+what is 4+2?	6
+what is 4+3?	7
+what is 4+0?	4
