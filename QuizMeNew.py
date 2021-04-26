@@ -159,18 +159,21 @@ def popQuiz():
     fileRead = open(setName, "r")
     data = fileRead.readlines()
     fileRead.close()
-    # Create a list of questions and answer
-    quesArray = arrayCreate(data)
+    # Create a lists of questions and answer
+    # FIXME: This is inefficient but gets the work done for now
     tempQuesArray = arrayCreate(data)
+    quesArray = arrayCreate(data)
     # In event of questions more than 10 create list of random ques
     toRemove = len(tempQuesArray) - 10
     if len(tempQuesArray) > 10:
         for i in range(0, toRemove):
             pickedQues = random.choice(tempQuesArray)
             tempQuesArray.remove(pickedQues)
+            quesArray.remove(pickedQues)
     # I have no idea how this program works. BUT it works.
     # I wrote it one day and forgot my thought process on this, lol
-    userAnswerDict, correctAnswerList = printQues_inputAnswers(tempQuesArray)
+
+    userAnswerDict, correctAnswerList = printQues_inputAnswers(quesArray)
 
     # Check the answers output: result, list of wrong answer with questions
     # Param format: User answer, questions, correct answers
@@ -351,15 +354,16 @@ Return: User answer for each question and correct answer list
 '''
 
 
-def printQues_inputAnswers(tempQuesArray):
+def printQues_inputAnswers(theQuesList):
     answerDict = {}
     correct_answerList = []
-    for i in range(0, len(tempQuesArray)): #FIXME: IT is removing the question from question list
-        print("Q" + str(i + 1) + ") " + tempQuesArray[i][0] + "\n")
+    for i in range(0, len(theQuesList)): 
+        print("Q" + str(i + 1) + ") " + theQuesList[i][0] + "\n")
         # For printing MCQ options and taking answer
-        if len(tempQuesArray[i]) == 5:
-            tempQuesArray[i].remove(tempQuesArray[i][0]) #Remove cause we print options using this
-            answerList = tempQuesArray[i]
+        if len(theQuesList[i]) == 5:
+            #FIXME: IT is removing the question from question list
+            theQuesList[i].remove(theQuesList[i][0]) #Remove cause we print options using this
+            answerList = theQuesList[i]
             # Fixed way to set correct option so we can check later
             correctOpt = answerList[0]
             # prints the choices randomly
@@ -373,8 +377,8 @@ def printQues_inputAnswers(tempQuesArray):
             answerUser = str(input("Enter your answer option(between 1-4):\n"))
             answerDict[str(i)] = answerUser
         # For taking single work answers
-        elif len(tempQuesArray[i]) == 2:
-            correct_answerList.append(tempQuesArray[i][1])
+        elif len(theQuesList[i]) == 2:
+            correct_answerList.append(theQuesList[i][1])
             answerUser = str(input("Enter your answer:\n"))
             answerDict[str(i)] = answerUser
     return answerDict, correct_answerList
@@ -388,16 +392,15 @@ Return: the result, list of wrong answer and their questions
 
 def checkAnswer(userAns, quesList, correctAns):
     wrongAnswerList = []
-    tempQuesArray = quesList
-    # Total questions = len(quesList)
+    print(quesList)
     right_counter = 0
-    for i in range(0, len(tempQuesArray)):
+    for i in range(0, len(quesList)):
         if userAns[str(i)] == correctAns[i]:
             right_counter += 1
         else:
-            tempArray = [tempQuesArray[i][0], userAns[str(i)], correctAns[i]]
+            tempArray = [quesList[i][0], userAns[str(i)], correctAns[i]]
             wrongAnswerList.append(tempArray)
-    resultCalculated = float(right_counter / len(tempQuesArray)) * 100.0
+    resultCalculated = float(right_counter / len(quesList)) * 100.0
     return resultCalculated, wrongAnswerList
 
 
